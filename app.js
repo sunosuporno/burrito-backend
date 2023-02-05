@@ -24,6 +24,10 @@ const pool = new Pool({
   port: port,
 });
 
+app.get("/", (req, res) => {
+  res.send("Hello World");
+});
+
 // getall Miners at endpoint /getMiners
 
 app.get("/getMiners", (req, res) => {
@@ -70,9 +74,10 @@ app.post("/insertStakeAmount/:name/:stakeAmount", async (req, res) => {
     const text2 = "UPDATE miner SET stake_amount = $1 WHERE miner_id = $2";
     const values2 = [newStakeAmount, name];
 
-    const resUpdate = await client.query(text2, values2);
-    const update = resUpdate.rows;
-    res.send(update);
+    await client.query(text2, values2);
+    const resUpdatedData = await client.query(text, values);
+    const updatedData = resUpdatedData.rows;
+    res.send(updatedData);
   } catch (err) {
     console.log(err);
   } finally {
